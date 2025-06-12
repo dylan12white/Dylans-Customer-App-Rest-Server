@@ -49,6 +49,14 @@ export function App(params) {
   }
 
   let onSaveClick = function () {
+    if (
+      !formObject.name.trim() ||
+      !formObject.email.trim() ||
+      !formObject.password.trim()
+    ) {
+    alert("All fields are required.");
+    return;
+  }
     if (mode === 'Add') {
       post(formObject);
     }
@@ -110,7 +118,8 @@ export function App(params) {
                 name="email"
                 onChange={(e) => handleInputChange(e)}
                 value={formObject.email}
-                placeholder="name@company.com" /></td>
+                placeholder="name@company.com"
+                required /></td>
             </tr>
             <tr>
               <td className={'label'} >Pass:</td>
@@ -119,7 +128,8 @@ export function App(params) {
                 name="password"
                 onChange={(e) => handleInputChange(e)}
                 value={formObject.password}
-                placeholder="password" /></td>
+                placeholder="password"
+                required /></td>
             </tr>
             <tr className="button-bar">
               <td colSpan="2">
