@@ -19,8 +19,13 @@ export function App(params) {
 
   const handleListClick = function(item){
     log("in handleListClick()");
-    setFormObject(item);
-  }  
+    if (formObject.id === item.id) {
+      setFormObject(blankCustomer);
+    } else {
+      setFormObject(item);
+    }
+  }
+   
 
   const handleInputChange = function (event) {
     log("in handleInputChange()");
