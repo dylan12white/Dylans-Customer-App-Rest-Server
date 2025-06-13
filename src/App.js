@@ -1,5 +1,5 @@
 import React, { useState, useEffect} from 'react';
-import { getAll, post, put, deleteById } from './memdb.js'
+import { getAll, post, put, deleteById } from './restdb.js'
 import './App.css';
 
 function log(message){console.log(message);}
@@ -9,12 +9,13 @@ export function App(params) {
   const [customers, setCustomers] = useState([]);
   const [formObject, setFormObject] = useState(blankCustomer);
   let mode = (formObject.id >= 0) ? 'Update' : 'Add';
-  useEffect(() => { getCustomers() }, []);
+  useEffect(() => { getCustomers() }, [formObject]);
+
 
 
   const getCustomers =  function(){
     log("in getCustomers()");
-    setCustomers(getAll());
+    getAll(setCustomers);
   }
 
   const handleListClick = function(item){
@@ -42,29 +43,32 @@ export function App(params) {
   }
 
   let onDeleteClick = function () {
-    if(formObject.id >= 0){
-      deleteById(formObject.id);
-    }  
-    setFormObject(blankCustomer);
-  }
+ let postopCallback = () => { setFormObject(blankCustomer); }
+ if (formObject.id >= 0) {
+ deleteById(formObject.id, postopCallback);
+ } else {
+ setFormObject(blankCustomer);
+ }
+}
+
 
   let onSaveClick = function () {
-    if (
+     if (
       !formObject.name.trim() ||
       !formObject.email.trim() ||
       !formObject.password.trim()
     ) {
     alert("All fields are required.");
     return;
-  }
-    if (mode === 'Add') {
-      post(formObject);
-    }
-    if (mode === 'Update') {
-      put(formObject.id, formObject);
-    }
-    setFormObject(blankCustomer);
-  }
+  } 
+ let postopCallback = () => { setFormObject(blankCustomer); }
+ if (mode === 'Add') {
+ post(formObject, postopCallback);
+ }
+ if (mode === 'Update') {
+ put(formObject, postopCallback);
+ }
+}
 
   return (
     <div>
